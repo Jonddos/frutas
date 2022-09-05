@@ -108,8 +108,8 @@ if ($_SESSION['login']) {
                     
                     $_SESSION['datos'] = $fila;
                     $_SESSION['login'] = true;
-                    var_dump($_SESSION['datos']);
-                    var_dump($_SESSION['login']);
+                   /*  var_dump($_SESSION['datos']);
+                    var_dump($_SESSION['login']); */
                     if ($_SESSION['datos']['rol_id']==1) {
                         echo "
                         <script>alert('Inicio Sesion ".$_SESSION['datos']['nombre_usuario']." ".$_SESSION['datos']['apellido_usuario']."');</script>

@@ -64,6 +64,15 @@
         <!-- Codigo para el main -->
         <main>
             <div class="container">
+                 <button 
+                    type="button" 
+                    class="btn btn-success mb-3" 
+                    data-bs-toggle="modal" 
+                    data-bs-target="#editarModal"
+                    data-type="create"
+                >
+                <i class="bi bi-plus-lg"></i> Crear Nuevo Usuario
+                </button>
                 <table id="usersTable" class="table table-hover">
                     <tr class="table-success">
                         <th>tipoDoc_usuario</th>
@@ -96,6 +105,7 @@
                                         class="btn btn-success" 
                                         data-bs-toggle="modal" 
                                         data-bs-target="#editarModal"
+                                        data-type="update"
                                     >
                                         <i :user-id="user.id_usuario" class="bi bi-pencil-square"></i>
                                     </button>
@@ -177,12 +187,12 @@
                 </div>
         </footer>
     </div>
-    <!-- Codigo para el modal editar -->
+    <!-- Codigo para el modal editar y crear -->
     <div class="modal fade" id="editarModal" tabindex="-1" aria-labelledby="editarModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content" id="userApp">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Editar</h5>
+                    <h5 class="modal-title" >{{store.modalMode}}</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
@@ -255,9 +265,20 @@
                                 </select>
                             </div>
                         </div>
+                        <div class="row" v-if="store.modalMode=='Crear Usuario'">
+                            <div class="col-6">
+                                <label class="form-label">Contraseña:</label>     
+                                <input  class="form-control" type="password" >
+                            </div>
+                            <div class="col-6">
+                                <label class="form-label">Confirmar contraseña:</label> 
+                                <input class="form-control" type="password" v-model="store.actualUser.contraseña_usuario">
+                            </div>
+                        
+                        </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cancelar</button>
-                            <button type="button" class="btn btn-success" data-bs-dismiss="modal" v-on:click="store.updateUser()">Actualizar Usuario</button>
+                            <button type="button" class="btn btn-success" data-bs-dismiss="modal" v-on:click="store.updateUser()">{{store.modalMode}}</button>
                         </div>
                     </form>
                 </div>

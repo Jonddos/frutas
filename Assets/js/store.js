@@ -5,7 +5,28 @@ const  { reactive } = Vue
 const { createApp } = Vue;
 const store = reactive({
   actualUser: {},
+  modalMode: '',
   allUsers: [],
+  createUser(){
+    //Funcion para crear datos
+    let dataForm = new FormData()
+    dataForm.append("create","yes")
+    dataForm.append("data", JSON.stringify(this.actualUser))
+    fetch(
+        `http://localhost/archivos/Proyecto_Fruver_Alterno/api/createDataUser`,{
+            method: 'POST',
+            body: dataForm
+        }
+    )
+    .then(response => {
+        this.getAllUsers()
+        console.log(response)
+        response.json()
+    })
+    .then(data =>{
+      console.log(data)       
+    });
+  },
   getAllUsers(){
     fetch(`http://localhost/archivos/Proyecto_Fruver_Alterno/api/getAllUsers`)
     .then(response => response.json())
@@ -14,6 +35,9 @@ const store = reactive({
     });
   },
   updateUser(){
+    if(this.modalMode == "Crear Usuario"){
+      return this.createUser()
+    }
     //funcion para actualizar datos
     let userId = this.actualUser.id_usuario
     let dataForm = new FormData()
