@@ -1,18 +1,3 @@
-<?php
-
-require_once('conexion.php');
-$sql = "SELECT u.*, r.* from usuarios u inner join roles r on u.rol_id = r.id_rol;";
-$traerInfo = $conexion->prepare($sql);
-$traerInfo->execute();
-$leer = $traerInfo->fetchAll(PDO::FETCH_ASSOC);
-
-var_dump($leer);
-
-?>
-
-
-
-
 <!DOCTYPE html>
 <html lang="es">
 
@@ -37,7 +22,7 @@ var_dump($leer);
 </head>
 
 <body>
-    <div >
+    <div>
         <!-- Codigo para el header -->
         <header>
             <nav class="navbar navbar-expand-lg navbar-light bg-fruver">
@@ -76,7 +61,7 @@ var_dump($leer);
         <!-- Codigo para el main -->
         <main>
             <div class="container">
-                <table class="table table-hover">
+                <table id="usersTable" class="table table-hover">
                     <tr class="table-success">
                         <th>tipoDoc_usuario</th>
                         <th>identificacion_usuario</th>
@@ -88,31 +73,22 @@ var_dump($leer);
                         <th>estatus</th>
                         <th>Tipo Rol</th>
                     </tr>
-                    <tr>
-                        <?php
-                        for ($i = 0; $i < count($leer); $i++) {
-                            $estado = $leer[$i]['estatus'];
-                            if ($estado == 0) {
-                                $estado = 'inactivo';
-                            } else {
-                                $estado = 'Activo';
-                            }
-                        }
-                        foreach ($leer as $key => $datos) : ?>
-                            <td><?= $datos['tipoDoc_usuario'] ?></td>
-                            <td><?= $datos['identificacion_usuario'] ?></td>
-                            <td><?= $datos['nombre_usuario'] ?></td>
-                            <td><?= $datos['apellido_usuario'] ?></td>
-                            <td><?= $datos['correo_usuario'] ?></td>
-                            <td><?= $datos['telefono_usuario'] ?></td>
-                            <td><?= $datos['direccion_usuario'] ?></td>
-                            <td><?= $estado ?></td>
-                            <td><?= $datos['nombre_rol'] ?></td>
+                    <template v-for="user in store.allUsers">
+                        <tr>
+                            <td> {{ user.tipoDoc_usuario }}</td>
+                            <td>{{ user.identificacion_usuario }}</td>
+                            <td>{{ user.nombre_usuario }}</td>
+                            <td>{{ user.apellido_usuario }}</td>
+                            <td>{{ user.correo_usuario }}</td>
+                            <td>{{ user.telefono_usuario }}</td>
+                            <td>{{ user.direccion_usuario }}</td>
+                            <td>{{ user.estatus }}</td>
+                            <td>{{ user.nombre_rol }}</td>
                             <td>
-                                <button user-id="<?= $datos['id_usuario'] ?>" type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#editarModal">Editar</button>
+                                <button :user-id="user.id_usuario" type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#editarModal">Editar</button>
                             </td>
-                    </tr>
-                <?php endforeach; ?>
+                        </tr>
+                    </template>
                 </table>
             </div>
 
@@ -187,15 +163,7 @@ var_dump($leer);
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <?php
 
-                    require_once('conexion.php');
-                    $sql = "SELECT u.*, r.* from usuarios u inner join roles r on u.rol_id = r.id_rol;";
-                    $traerInfo = $conexion->prepare($sql);
-                    $traerInfo->execute();
-                    $leer = $traerInfo->fetchAll(PDO::FETCH_ASSOC);
-
-                    ?>
                     <form>
                         <input type="hidden" value="">
                         <div class="row">
@@ -203,7 +171,15 @@ var_dump($leer);
                                 <label for="tipoDoc_usuario" class="form-label">Número de Documento</label>
                                 <input type="text" class="form-control" id="numDoc" aria-describedby="emailHelp" name="numDoc" v-model="store.actualUser.identificacion_usuario">
                             </div>
-                            
+                            <div class="col-md-6 mb-6">
+                                <label for="tipoDoc_usuario" class="form-label">Tipo de Documento</label>
+                                <select type="text" class="form-control" id="tipoDoc_usuario" aria-describedby="emailHelp" name="tipoDoc_usuario" v-model="store.actualUser.tipoDoc_usuario">
+                                    <option value="Cedula Ciudadania">Cedula Ciudadania</option>
+                                    <option value="Tarjeta Identidad">Tarjeta Identidad</option>
+                                    <option value="Cedula Extranjeria">Cedula Extranjeria</option>
+                                </select>
+                            </div>
+
                         </div>
                         <div class="row">
                             <div class="col-md-6 mb-6">
@@ -232,13 +208,17 @@ var_dump($leer);
                             </div>
                             <div class="col-md-6 mb-3">
                                 <label for="direccion_usuario" class="form-label">estado</label>
-                                <input type="text" class="form-control" id="estado_usuario" aria-describedby="emailHelp" name="estado_usuario" v-model="store.actualUser.estatus">
+                                <select type="text" class="form-control" id="estado_usuario" aria-describedby="emailHelp" name="estado_usuario" v-model="store.actualUser.estatus">
+                                    <option value="1">activo</option>
+                                    <option value="0">inactivo</option>                                    
+                                </select>
                             </div>
                         </div>
-                        <div class="row mb-3">
+                        
+                        <div class="row">
+                            <div class="col-md-12">
                                 <label for="doc_usuario" class="form-label">Rol</label>
-                                <select name="rolUsuario" id="rolUsuario" class="form-select form-select-lg mb-3" aria-label=".form-select-lg example" v-model="store.actualUser.rol_id">
-                                    <option disabled value="">Please select one</option>
+                                <select name="rolUsuario" id="rolUsuario" class="form-select form-select-md mb-3" aria-label=".form-select-lg example" v-model="store.actualUser.rol_id">
                                     <?php
                                     require_once('conexion.php');
                                     $sql = "SELECT * from roles;";
@@ -252,6 +232,7 @@ var_dump($leer);
                                     ?>
                                 </select>
                             </div>
+                        </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cancelar</button>
                             <button type="button" class="btn btn-success" data-bs-dismiss="modal" v-on:click="store.updateUser()">Actualizar Usuario</button>
@@ -266,6 +247,7 @@ var_dump($leer);
     <script src="Assets/js/vue/vue.js" type="text/javascript"></script>
     <script src="Assets/js/store.js" type="text/javascript"></script>
     <script src="Assets/js/editar.js" type="text/javascript"></script>
+    <script src="Assets/js/components/allUsers_component.js" type="text/javascript"></script>
     <script src="Assets/js/components/user_component.js" type="text/javascript"></script>
 </body>
 

@@ -2,9 +2,17 @@
 // Sirve para tener datos reactivos
 // reactivos = interactivos
 const  { reactive } = Vue
-
+const { createApp } = Vue;
 const store = reactive({
   actualUser: {},
+  allUsers: [],
+  getAllUsers(){
+    fetch(`http://localhost/archivos/Proyecto_Fruver_Alterno/api/getAllUsers`)
+    .then(response => response.json())
+    .then(data =>{
+        store.allUsers = data     
+    });
+  },
   updateUser(){
     //funcion para actualizar datos
     let userId = this.actualUser.id_usuario
@@ -18,6 +26,7 @@ const store = reactive({
         }
     )
     .then(response => {
+        this.getAllUsers()
         console.log(response)
         response.json()
     })

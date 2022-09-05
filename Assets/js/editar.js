@@ -6,7 +6,6 @@ modalEditar.addEventListener('show.bs.modal', event => {
     fetch(`http://localhost/archivos/Proyecto_Fruver_Alterno/api/getUser.php?userId=${userId}`)
     .then(response => response.json())
     .then(data =>{
-        console.log(data)
         store.actualUser = data
         
     });
