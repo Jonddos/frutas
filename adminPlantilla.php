@@ -17,6 +17,9 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Dongle:wght@300&family=Open+Sans&family=Oswald:wght@200;300;400;500;600;700&family=Roboto:ital,wght@0,100;1,100&display=swap" rel="stylesheet">
+    
+    <!-- cdn icons bootstrap v1.3 -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css">
 
 
 </head>
@@ -72,10 +75,11 @@
                         <th>direccion_usuario</th>
                         <th>estatus</th>
                         <th>Tipo Rol</th>
+                        <th colspan="2"></th>
                     </tr>
                     <template v-for="user in store.allUsers">
                         <tr>
-                            <td> {{ user.tipoDoc_usuario }}</td>
+                            <td>{{ user.tipoDoc_usuario }}</td>
                             <td>{{ user.identificacion_usuario }}</td>
                             <td>{{ user.nombre_usuario }}</td>
                             <td>{{ user.apellido_usuario }}</td>
@@ -84,8 +88,27 @@
                             <td>{{ user.direccion_usuario }}</td>
                             <td>{{ user.estatus }}</td>
                             <td>{{ user.nombre_rol }}</td>
-                            <td>
-                                <button :user-id="user.id_usuario" type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#editarModal">Editar</button>
+                            <td colspan="2">
+                                <div class="d-flex">
+                                    <button 
+                                        :user-id="user.id_usuario" 
+                                        type="button" 
+                                        class="btn btn-success" 
+                                        data-bs-toggle="modal" 
+                                        data-bs-target="#editarModal"
+                                    >
+                                        <i :user-id="user.id_usuario" class="bi bi-pencil-square"></i>
+                                    </button>
+                                    <button 
+                                        :user-id="user.id_usuario" 
+                                        type="button" 
+                                        class="btn btn-danger ms-1" 
+                                        data-bs-toggle="modal" 
+                                        data-bs-target="#deleteModal"
+                                    >
+                                        <i :user-id="user.id_usuario" class="bi bi-trash-fill"></i>
+                                    </button>
+                                </div>
                             </td>
                         </tr>
                     </template>
@@ -154,16 +177,15 @@
                 </div>
         </footer>
     </div>
-    <!-- Codigo para el modal -->
-    <div class="modal fade" id="editarModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <!-- Codigo para el modal editar -->
+    <div class="modal fade" id="editarModal" tabindex="-1" aria-labelledby="editarModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content" id="userApp">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+                    <h5 class="modal-title" id="exampleModalLabel">Editar</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-
                     <form>
                         <input type="hidden" value="">
                         <div class="row">
@@ -173,7 +195,7 @@
                             </div>
                             <div class="col-md-6 mb-6">
                                 <label for="tipoDoc_usuario" class="form-label">Tipo de Documento</label>
-                                <select type="text" class="form-control" id="tipoDoc_usuario" aria-describedby="emailHelp" name="tipoDoc_usuario" v-model="store.actualUser.tipoDoc_usuario">
+                                <select class="form-control" id="tipoDoc_usuario" aria-describedby="emailHelp" name="tipoDoc_usuario" v-model="store.actualUser.tipoDoc_usuario">
                                     <option value="Cedula Ciudadania">Cedula Ciudadania</option>
                                     <option value="Tarjeta Identidad">Tarjeta Identidad</option>
                                     <option value="Cedula Extranjeria">Cedula Extranjeria</option>
@@ -208,7 +230,7 @@
                             </div>
                             <div class="col-md-6 mb-3">
                                 <label for="direccion_usuario" class="form-label">estado</label>
-                                <select type="text" class="form-control" id="estado_usuario" aria-describedby="emailHelp" name="estado_usuario" v-model="store.actualUser.estatus">
+                                <select class="form-control" id="estado_usuario" aria-describedby="emailHelp" name="estado_usuario" v-model="store.actualUser.estatus">
                                     <option value="1">activo</option>
                                     <option value="0">inactivo</option>                                    
                                 </select>
@@ -242,6 +264,28 @@
             </div>
         </div>
     </div>
+    <!-- Modal ELIMINAR-->
+    <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form action="">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Eliminar Usuario</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <p>Esta acción irerversible, ¿Seguro qué quieres continuar?</p>
+                    </div>
+                    <div class="modal-footer">
+                        <input type="hidden" name="delete_user_id" id="delete_user_id" value="">
+                        <button type="button" class="btn btn-info" data-bs-dismiss="modal">Cancelar</button>
+                        <button type="button" class="btn btn-danger" data-bs-dismiss="modal" onclick="store.deleteUser()">Eliminar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
     <!-- Javascript Antes de cerrar el body-->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
     <script src="Assets/js/vue/vue.js" type="text/javascript"></script>
