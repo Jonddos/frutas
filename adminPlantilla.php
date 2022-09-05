@@ -249,13 +249,12 @@ var_dump($leer);
                                     foreach ($leerRol as $key => $datos) {
                                         echo "<option value='{$datos['id_rol']}'>{$datos['nombre_rol']}</option>";
                                     }
-
                                     ?>
                                 </select>
                             </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cancelar</button>
-                            <button type="submit" class="btn btn-success">Actualizar Usuario</button>
+                            <button type="button" class="btn btn-success" data-bs-dismiss="modal" v-on:click="store.updateUser()">Actualizar Usuario</button>
                         </div>
                     </form>
                 </div>

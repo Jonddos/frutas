@@ -8,6 +8,7 @@ modalEditar.addEventListener('show.bs.modal', event => {
     .then(data =>{
         console.log(data)
         store.actualUser = data
+        
     });
 }); 
 
